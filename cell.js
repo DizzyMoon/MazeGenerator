@@ -1,10 +1,10 @@
 export class Cell {
-        constructor(row, col, north = false, east = false, west = false, south = false){
+        constructor(row, col, northWall = true, eastWall = true, westWall = true, southWall = true){
             this.row = row;
             this.col = col;
-            this.north = north;
-            this.east = east;
-            this.west = west;
-            this.south = south;
+            this.northWall = northWall;
+            this.eastWall = eastWall;
+            this.westWall = westWall;
+            this.southWall = southWall;
         }
 }
