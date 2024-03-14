@@ -51,6 +51,9 @@ function createStartPath(maze){
   let currentCell = start;
   let visited = [];
 
+
+  console.log(maze)
+
   const numberOfCells = maze.cols * maze.rows
 
   console.log("visited size: " + visited.length)
@@ -59,13 +62,15 @@ function createStartPath(maze){
 
   while (visited.length < numberOfCells) {
 
-    console.log("Current Cell: " + currentCell)
+    
     
     let nextCell = pickRandomNeighbor();
 
-    console.log("nextCell.col: " + nextCell.col)
-    console.log("newMaze.cols: " + newMaze.cols)
-    if (nextCell.col >= 0 && nextCell.col <= maze.cols && nextCell.row >= 0 && nextCell.row <= maze.rows ) {
+    if (nextCell.col >= 0 && nextCell.col <= maze.cols - 1 && nextCell.row >= 0 && nextCell.row <= maze.rows - 1 ) {
+
+      console.log("Current Cell: " + currentCell.col + ", " + currentCell.row)
+      console.log("Next Cell: " + nextCell.col + ", " + nextCell.row)
+
     if (!(visited.includes(nextCell))){
       if (nextCell.col > currentCell.col){
         console.log("Going east")
@@ -92,6 +97,7 @@ function createStartPath(maze){
     }
 
     currentCell = nextCell;
+    console.log("Amount of cells currently visited: " + visited.length)
     }
   }
 
@@ -105,22 +111,34 @@ function createStartPath(maze){
         x = currentCell.col;
         y = currentCell.row;
         newMaze[x][y].eastWall = false;
+        if (x + 1 <= maze.cols - 1){
         newMaze[x + 1][y].westWall = false;
+        }
+        break;
       case "west":
         x = currentCell.col;
         y = currentCell.row;
         newMaze[x][y].westWall = false;
-        newMaze[x - 1][y].eastWall = false;
+        if (x - 1 >= 0){
+          newMaze[x - 1][y].eastWall = false;
+        }
+        break;
       case "north":
         x = currentCell.col;
         y = currentCell.row;
         newMaze[x][y].northWall = false;
-        newMaze[x][y + 1].southWall = false;
+        if (y + 1 <= maze.rows - 1){
+          newMaze[x][y + 1].southWall = false;
+        }
+        break;
       case "south":
         x = currentCell.col;
         y = currentCell.row;
         newMaze[x][y].southWall = false;
-        newMaze[x][y - 1].northWall = false;
+        if (y - 1 >= 0){
+          newMaze[x][y - 1].northWall = false;
+        }
+        break;
     }
   }
 
