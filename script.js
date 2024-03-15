@@ -50,15 +50,75 @@ function createStartPath(maze){
   let goal = maze.goal;
   let currentCell = start;
   let visited = [];
+  const numberOfCells = maze.cols * maze.rows
+
+
+  const removeWall = (direction) => {
+    let x
+    let y
+    switch (direction) {
+      case "east":
+        x = currentCell.col;
+        y = currentCell.row;
+        newMaze[x][y].eastWall = false;
+        if (x + 1 <= maze.cols){
+        newMaze[x + 1][y].westWall = false;
+        }
+        break;
+      case "west":
+        x = currentCell.col;
+        y = currentCell.row;
+        newMaze[x][y].westWall = false;
+        if (x - 1 >= 0){
+          newMaze[x - 1][y].eastWall = false;
+        }
+        break;
+      case "north":
+        x = currentCell.col;
+        y = currentCell.row;
+        newMaze[x][y].northWall = false;
+        if (y + 1 <= maze.rows){
+          newMaze[x][y + 1].southWall = false;
+        }
+        break;
+      case "south":
+        x = currentCell.col;
+        y = currentCell.row;
+        newMaze[x][y].southWall = false;
+        if (y - 1 >= 0){
+          newMaze[x][y - 1].northWall = false;
+        }
+        break;
+    }
+  }
+
+  const pickRandomNeighbor = () => {
+    let newCell = Object.assign({}, currentCell)
+    switch (Math.floor(Math.random() * 4 + 1)) {
+      case 1:
+        newCell.col = newCell.col + 1;
+        return newCell;
+      case 2:
+        newCell.col = newCell.col - 1;
+        return newCell;
+      case 3:
+        newCell.row = newCell.row + 1;
+        return newCell;
+      case 4:
+        newCell.row = newCell.row - 1;
+        return newCell;
+    }
+  }
 
 
   console.log(maze)
 
-  const numberOfCells = maze.cols * maze.rows
 
   console.log("visited size: " + visited.length)
 
   console.log("Number of cells: " + numberOfCells)
+
+
 
   while (visited.length < numberOfCells) {
 
@@ -103,62 +163,7 @@ function createStartPath(maze){
 
   return newMaze;
 
-  function removeWall(direction) {
-    let x
-    let y
-    switch (direction) {
-      case "east":
-        x = currentCell.col;
-        y = currentCell.row;
-        newMaze[x][y].eastWall = false;
-        if (x + 1 <= maze.cols - 1){
-        newMaze[x + 1][y].westWall = false;
-        }
-        break;
-      case "west":
-        x = currentCell.col;
-        y = currentCell.row;
-        newMaze[x][y].westWall = false;
-        if (x - 1 >= 0){
-          newMaze[x - 1][y].eastWall = false;
-        }
-        break;
-      case "north":
-        x = currentCell.col;
-        y = currentCell.row;
-        newMaze[x][y].northWall = false;
-        if (y + 1 <= maze.rows - 1){
-          newMaze[x][y + 1].southWall = false;
-        }
-        break;
-      case "south":
-        x = currentCell.col;
-        y = currentCell.row;
-        newMaze[x][y].southWall = false;
-        if (y - 1 >= 0){
-          newMaze[x][y - 1].northWall = false;
-        }
-        break;
-    }
-  }
-
-  function pickRandomNeighbor() {
-    let newCell = Object.assign({}, currentCell)
-    switch (Math.floor(Math.random() * 4 + 1)) {
-      case 1:
-        newCell.col = newCell.col + 1;
-        return newCell;
-      case 2:
-        newCell.col = newCell.col - 1;
-        return newCell;
-      case 3:
-        newCell.row = newCell.row + 1;
-        return newCell;
-      case 4:
-        newCell.row = newCell.row - 1;
-        return newCell;
-    }
-  }
+  
 
 }
 
@@ -172,4 +177,8 @@ function initializeMaze(size) {
     maze.push(row);
   }
   return maze;
+}
+
+function drawMaze(maze) {
+
 }
