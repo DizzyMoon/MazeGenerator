@@ -3,7 +3,7 @@
 import { Cell } from "./cell.js";
 import { MazeObject } from "./maze-object.js";
 
-window.addEventListener("DOMContentLoaded", start);
+//window.addEventListener("DOMContentLoaded", start);
 
 const generateButton = document.getElementById('generate-new')
 const loadingContainer = document.getElementById('loading-container')
