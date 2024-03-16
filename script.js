@@ -7,31 +7,44 @@ window.addEventListener("DOMContentLoaded", start);
 
 function start() {
   console.log("Javascript is running :)");
-  let size = 5;
+  let size = 10;
   console.log("New Maze: ");
-  let maze = generateMaze(size)
+  let maze = generateMaze(size);
   console.table(`Final maze: `);
-  console.log(maze)
+  console.log(maze);
 }
 
 function updateMaze(size, maze) {
+  const startX = Math.floor(Math.random() * size);
+  const startY = Math.floor(Math.random() * size);
+  
+  const startPos = {
+    "X": startX,
+    "Y": startY
+  }
 
-  const startX = Math.floor(Math.random() * size)
-  const startY = Math.floor(Math.random() * size)
+  let goalX = startX;
+  let goalY = startY;
+  
+  let goalPos = startPos;
+  while (goalPos === startPos){
+    goalX = Math.floor(Math.random() * size);
+    goalY = Math.floor(Math.random() * size);
 
-  const goalX = Math.floor(Math.random() * size)
-  const goalY = Math.floor(Math.random() * size)
+    goalPos = {
+      "X": goalX,
+      "Y": goalY
+    }
+  
+  }
 
-  let start = maze[startX][startY]
+  let start = maze[startX][startY];
 
-  console.log("Start position: " + JSON.stringify(start))
- 
+  console.log("Start position: " + JSON.stringify(start));
 
+  let goal = maze[goalX][goalY];
 
-  let goal = maze[goalX][goalY]
-
-
-  console.log("Goal position: " + JSON.stringify(goal))
+  console.log("Goal position: " + JSON.stringify(goal));
 
   return new MazeObject(size, size, start, goal, maze);
 }
@@ -43,58 +56,73 @@ function generateMaze(size) {
   console.log(size, size);
 
   return mazeWithPath;
-
 }
 
-function createStartPath(maze){
+function createStartPath(maze) {
   let newMaze = maze.maze;
   let mazeWithPath = maze;
   let start = maze.start;
   let goal = maze.goal;
   let currentCell = start;
-  let visited = [];
-  const numberOfCells = maze.cols * maze.rows
+  let nextCell = null;
+  let visited = new Set();
+  const numberOfCells = maze.cols * maze.rows;
   const removeWall = (direction) => {
-    let x
-    let y
+    let currentX;
+    let currentY;
+
+    let nextX;
+    let nextY;
+
     switch (direction) {
-      case "east":
-        x = currentCell.col;
-        y = currentCell.row;
-        newMaze[x][y].eastWall = false;
-        if (x + 1 <= maze.cols){
-        newMaze[x + 1][y].westWall = false;
-        }
-        break;
       case "west":
-        x = currentCell.col;
-        y = currentCell.row;
-        newMaze[x][y].westWall = false;
-        if (x - 1 >= 0){
-          newMaze[x - 1][y].eastWall = false;
-        }
+        currentX = currentCell.row;
+        currentY = currentCell.col;
+
+        nextX = nextCell.row;
+        nextY = nextCell.col;
+
+        newMaze[currentX][currentY].westWall = false;
+
+        newMaze[nextX][nextY].eastWall = false;
+      
         break;
-      case "north":
-        x = currentCell.col;
-        y = currentCell.row;
-        newMaze[x][y].northWall = false;
-        if (y + 1 <= maze.rows){
-          newMaze[x][y + 1].southWall = false;
-        }
+      case "east":
+        currentX = currentCell.row;
+        currentY = currentCell.col;
+
+        nextX = nextCell.row;
+        nextY = nextCell.col;
+
+        newMaze[currentX][currentY].eastWall = false;
+        newMaze[nextX][nextY].westWall = false;
+
         break;
       case "south":
-        x = currentCell.col;
-        y = currentCell.row;
-        newMaze[x][y].southWall = false;
-        if (y - 1 >= 0){
-          newMaze[x][y - 1].northWall = false;
-        }
+        currentX = currentCell.row;
+        currentY = currentCell.col;
+
+        nextX = nextCell.row;
+        nextY = nextCell.col;
+
+        newMaze[currentX][currentY].southWall = false;
+        newMaze[nextX][nextY].northWall = false;
+        break;
+      case "north":
+        currentX = currentCell.row;
+        currentY = currentCell.col;
+
+        nextX = nextCell.row;
+        nextY = nextCell.col;
+      
+        newMaze[currentX][currentY].northWall = false;
+        newMaze[nextX][nextY].southWall = false;
         break;
     }
-  }
+  };
 
   const pickRandomNeighbor = () => {
-    let newCell = Object.assign({}, currentCell)
+    let newCell = Object.assign({}, currentCell);
     switch (Math.floor(Math.random() * 4 + 1)) {
       case 1:
         newCell.col = newCell.col + 1;
@@ -109,69 +137,73 @@ function createStartPath(maze){
         newCell.row = newCell.row - 1;
         return newCell;
     }
-  }
+  };
 
+  console.log(maze);
 
-  console.log(maze)
+  console.log("visited size: " + visited.size);
 
+  console.log("Number of cells: " + numberOfCells);
 
-  console.log("visited size: " + visited.length)
+  while (visited.size < numberOfCells) {
+    nextCell = pickRandomNeighbor();
 
-  console.log("Number of cells: " + numberOfCells)
+    if (
+      nextCell.col >= 0 &&
+      nextCell.col <= maze.cols - 1 &&
+      nextCell.row >= 0 &&
+      nextCell.row <= maze.rows - 1
+    ) {
+      newMaze[currentCell.row][currentCell.col].isCurrentCell = true;
+      newMaze[nextCell.row][nextCell.col].isNextCell = true;
 
+      newMaze[start.col][start.row].isStart = true;
+      newMaze[goal.col][goal.row].isGoal = true;
 
+      console.log("Current Cell: " + currentCell.col + ", " + currentCell.row);
 
-  while (visited.length < numberOfCells) {
-  let nextCell = pickRandomNeighbor();
+      console.log("Next Cell: " + nextCell.col + ", " + nextCell.row);
 
-    if (nextCell.col >= 0 && nextCell.col <= maze.cols - 1 && nextCell.row >= 0 && nextCell.row <= maze.rows - 1 ) {
+      const cellKey = (cell) => `${cell.col},${cell.row}`;
 
-      newMaze[currentCell.col][currentCell.row].isCurrentCell = true;
-      nextCell.isNextCell = true;
-      console.log("Current Cell: " + currentCell.col + ", " + currentCell.row)
-      
-      console.log("Next Cell: " + nextCell.col + ", " + nextCell.row)
+      const nextCellKey = cellKey(nextCell);
 
-    if (!visited.includes(nextCell)) {
-      if (nextCell.col > currentCell.col){
-        console.log("Going east")
-        removeWall("east");
-        visited.push(nextCell)
+      if (!visited.has(nextCellKey)) {
+        if (nextCell.col > currentCell.col) {
+          console.log("Going east");
+          removeWall("east");
+          visited.add(nextCellKey);
+        }
+
+        if (nextCell.col < currentCell.col) {
+          console.log("Going west");
+          removeWall("west");
+          visited.add(nextCellKey);
+        }
+
+        if (nextCell.row < currentCell.row) {
+          console.log("Going north");
+          removeWall("north");
+          visited.add(nextCellKey);
+        }
+        if (nextCell.row > currentCell.row) {
+          console.log("Going south");
+          removeWall("south");
+          visited.add(nextCellKey);
+        }
       }
+      mazeWithPath.maze = newMaze;
+      drawMaze(mazeWithPath);
 
-      if (nextCell.col < currentCell.col){
-        console.log("Going west")
-        removeWall("west");
-        visited.push(nextCell)
-      }
-
-      if (nextCell.row > currentCell.row){
-        console.log("Going north")
-        removeWall("north")
-        visited.push(nextCell)
-      }
-      if (nextCell.row < currentCell.row){
-        console.log("Going south")
-        removeWall("south");
-        visited.push(nextCell)
-      }
+      newMaze[currentCell.row][currentCell.col].isCurrentCell = false;
+      newMaze[nextCell.row][nextCell.col].isNextCell = false;
+      newMaze[nextCell.row][nextCell.col].isCurrentCell = true;
+      currentCell = nextCell;
+      console.log("Amount of cells currently visited: " + visited.size);
     }
-    mazeWithPath.maze = newMaze;
-    drawMaze(mazeWithPath);
-    
-    newMaze[currentCell.col][currentCell.row].isCurrentCell = false;
-    newMaze[nextCell.col][nextCell.row].isCurrentCell = true;
-    currentCell = nextCell;
-    console.log("Amount of cells currently visited: " + visited.length)
-    }
   }
-
-  
 
   return mazeWithPath;
-
-  
-
 }
 
 function initializeMaze(size) {
@@ -187,45 +219,51 @@ function initializeMaze(size) {
 }
 
 function drawMaze(maze) {
-  const mazeContainer = document.getElementById('maze-container');
-  mazeContainer.innerHTML = ''
+  const mazeContainer = document.getElementById("maze-container");
+  mazeContainer.innerHTML = "";
 
   const colSize = maze.cols;
   const rowSize = maze.rows;
-  
-  for (let i = 0; i < colSize; i++){
-    const row = document.createElement('row')
-    row.classList.add('row')
-    mazeContainer.appendChild(row)
+
+  for (let i = 0; i < colSize; i++) {
+    const row = document.createElement("row");
+    row.classList.add("row");
+    mazeContainer.appendChild(row);
 
     for (let j = 0; j < rowSize; j++) {
-      const cell = document.createElement('cell')
-      cell.classList.add('cell')
+      const cell = document.createElement("cell");
+      cell.classList.add("cell");
 
-
-      if (maze.maze[i][j].isCurrentCell){
-        cell.classList.add('here')
+      if (maze.maze[i][j].isStart) {
+        cell.classList.add("start");
       }
 
-      if (maze.maze[i][j].isNextCell){
-        cell.classList.add('here')
+      if (maze.maze[i][j].isGoal) {
+        cell.classList.add("goal");
+      }
+
+      if (maze.maze[i][j].isCurrentCell) {
+        cell.classList.add("here");
+      }
+
+      if (maze.maze[i][j].isNextCell) {
+        cell.classList.add("next-cell");
       }
 
       if (maze.maze[i][j].northWall) {
-        cell.classList.add('up');
+        cell.classList.add("up");
       }
-      
-      if (maze.maze[i][j].southhWall) {
-        cell.classList.add('down');
-      }
-      
-      if (maze.maze[i][j].eastWall) {
-        cell.classList.add('right');
 
+      if (maze.maze[i][j].southWall) {
+        cell.classList.add("down");
+      }
+
+      if (maze.maze[i][j].eastWall) {
+        cell.classList.add("right");
       }
 
       if (maze.maze[i][j].westWall) {
-        cell.classList.add('left');
+        cell.classList.add("left");
       }
 
       row.appendChild(cell);
