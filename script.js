@@ -5,6 +5,13 @@ import { MazeObject } from "./maze-object.js";
 
 window.addEventListener("DOMContentLoaded", start);
 
+const generateButton = document.getElementById('generate-new')
+const loadingContainer = document.getElementById('loading-container')
+
+generateButton.addEventListener('click', start)
+
+let currentLoadTime = 0;
+
 function start() {
   console.log("Javascript is running :)");
   let size = 10;
@@ -14,7 +21,7 @@ function start() {
   console.log(maze);
 }
 
-function updateMaze(size, maze) {
+function updateMaze(size, maze) {/*
   const startX = Math.floor(Math.random() * size);
   const startY = Math.floor(Math.random() * size);
   
@@ -37,6 +44,13 @@ function updateMaze(size, maze) {
     }
   
   }
+  */
+
+  const startX = 0;
+  const startY = 0;
+
+  const goalX = size - 1;
+  const goalY = size - 1;
 
   let start = maze[startX][startY];
 
@@ -148,6 +162,8 @@ function createStartPath(maze) {
   while (visited.size < numberOfCells) {
     nextCell = pickRandomNeighbor();
 
+    loadingContainer.innerHTML = (visited.size / numberOfCells) * 100 + '%';
+
     if (
       nextCell.col >= 0 &&
       nextCell.col <= maze.cols - 1 &&
@@ -193,7 +209,11 @@ function createStartPath(maze) {
         }
       }
       mazeWithPath.maze = newMaze;
+
       drawMaze(mazeWithPath);
+
+      currentLoadTime = visited.size;
+      
 
       newMaze[currentCell.row][currentCell.col].isCurrentCell = false;
       newMaze[nextCell.row][nextCell.col].isNextCell = false;
@@ -202,6 +222,8 @@ function createStartPath(maze) {
       console.log("Amount of cells currently visited: " + visited.size);
     }
   }
+
+  loadingContainer.innerHTML = "100%"
 
   return mazeWithPath;
 }

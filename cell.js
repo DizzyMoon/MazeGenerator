@@ -10,6 +10,5 @@ export class Cell {
             this.isNextCell = isNextCell;
             this.isStart = isStart;
             this.isGoal = isGoal;
-            
         }
 }

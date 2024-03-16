@@ -1,28 +1,58 @@
+h1 {
+  color: rgb(187, 255, 203);
+}
+
+#loading-container{
+    color: rgb(187, 255, 203);
+}
+
+body {
+  background-color: rgb(26, 30, 23);
+  margin: 0;
+  height: 100vh; /* Set the body height to full viewport height */
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* Center the content horizontally */
+  align-items: center; /* Center the content vertically */
+}
+
+
+#generate-new{
+    padding: 10px;
+    margin: 10px;
+}
+
+#generate-new:hover {
+    background-color: rgb(203, 255, 203);
+}
+
+
 #maze-container {
-    display: grid;
-    gap: 0;
-    width: 250px;
-    justify-content: center;
+  display: grid;
+  gap: 0;
+  width: 250px;
+  align-items: center;
+  justify-content: center;
 }
 
 .row {
-    display: grid;
-    grid-template-rows: repeat(10, 25px);
-    grid-template-columns: repeat(10, 25px);
-    height: 25px;
+  display: grid;
+  grid-template-rows: repeat(10, 75px);
+  grid-template-columns: repeat(10, 75px);
+  height: 75px;
 }
 
 .cell {
-    display: grid;
-    background-color: white;
+  display: grid;
+  background-color: rgb(110, 133, 108);
 }
 
 .start {
-    background-color: red;
+  background-color: red;
 }
 
 .goal {
-    background-color: yellow;
+  background-color: yellow;
 }
 
 /*
@@ -35,20 +65,18 @@
 }
 */
 
-
-
 .left {
-    border-left: 1px solid black;
+  border-left: 2px solid black;
 }
 
 .right {
-    border-right: 1px solid black;
+  border-right: 2px solid black;
 }
 
 .up {
-   border-top: 1px solid black;
+  border-top: 2px solid black;
 }
 
 .down {
-  border-bottom: 1px solid black;
+  border-bottom: 2px solid black;
 }
