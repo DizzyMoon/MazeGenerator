@@ -9,7 +9,9 @@ function start() {
   console.log("Javascript is running :)");
   let size = 5;
   console.log("New Maze: ");
-  console.log(generateMaze(size));
+  let maze = generateMaze(size)
+  console.table(`Final maze: `);
+  console.log(maze)
 }
 
 function updateMaze(size, maze) {
@@ -46,13 +48,12 @@ function generateMaze(size) {
 
 function createStartPath(maze){
   let newMaze = maze.maze;
+  let mazeWithPath = maze;
   let start = maze.start;
   let goal = maze.goal;
   let currentCell = start;
   let visited = [];
   const numberOfCells = maze.cols * maze.rows
-
-
   const removeWall = (direction) => {
     let x
     let y
@@ -121,17 +122,17 @@ function createStartPath(maze){
 
 
   while (visited.length < numberOfCells) {
-
-    
-    
-    let nextCell = pickRandomNeighbor();
+  let nextCell = pickRandomNeighbor();
 
     if (nextCell.col >= 0 && nextCell.col <= maze.cols - 1 && nextCell.row >= 0 && nextCell.row <= maze.rows - 1 ) {
 
+      newMaze[currentCell.col][currentCell.row].isCurrentCell = true;
+      nextCell.isNextCell = true;
       console.log("Current Cell: " + currentCell.col + ", " + currentCell.row)
+      
       console.log("Next Cell: " + nextCell.col + ", " + nextCell.row)
 
-    if (!(visited.includes(nextCell))){
+    if (!visited.includes(nextCell)) {
       if (nextCell.col > currentCell.col){
         console.log("Going east")
         removeWall("east");
@@ -155,13 +156,19 @@ function createStartPath(maze){
         visited.push(nextCell)
       }
     }
-
+    mazeWithPath.maze = newMaze;
+    drawMaze(mazeWithPath);
+    
+    newMaze[currentCell.col][currentCell.row].isCurrentCell = false;
+    newMaze[nextCell.col][nextCell.row].isCurrentCell = true;
     currentCell = nextCell;
     console.log("Amount of cells currently visited: " + visited.length)
     }
   }
 
-  return newMaze;
+  
+
+  return mazeWithPath;
 
   
 
@@ -180,5 +187,48 @@ function initializeMaze(size) {
 }
 
 function drawMaze(maze) {
+  const mazeContainer = document.getElementById('maze-container');
+  mazeContainer.innerHTML = ''
 
+  const colSize = maze.cols;
+  const rowSize = maze.rows;
+  
+  for (let i = 0; i < colSize; i++){
+    const row = document.createElement('row')
+    row.classList.add('row')
+    mazeContainer.appendChild(row)
+
+    for (let j = 0; j < rowSize; j++) {
+      const cell = document.createElement('cell')
+      cell.classList.add('cell')
+
+
+      if (maze.maze[i][j].isCurrentCell){
+        cell.classList.add('here')
+      }
+
+      if (maze.maze[i][j].isNextCell){
+        cell.classList.add('here')
+      }
+
+      if (maze.maze[i][j].northWall) {
+        cell.classList.add('up');
+      }
+      
+      if (maze.maze[i][j].southhWall) {
+        cell.classList.add('down');
+      }
+      
+      if (maze.maze[i][j].eastWall) {
+        cell.classList.add('right');
+
+      }
+
+      if (maze.maze[i][j].westWall) {
+        cell.classList.add('left');
+      }
+
+      row.appendChild(cell);
+    }
+  }
 }
