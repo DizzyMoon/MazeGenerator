@@ -19,6 +19,7 @@ function start() {
   let maze = generateMaze(size);
   console.table(`Final maze: `);
   console.log(maze);
+  console.log(JSON.stringify(maze));
 }
 
 function updateMaze(size, maze) {/*
@@ -96,9 +97,9 @@ function createStartPath(maze) {
         nextX = nextCell.row;
         nextY = nextCell.col;
 
-        newMaze[currentX][currentY].westWall = false;
+        newMaze[currentX][currentY].west = false;
 
-        newMaze[nextX][nextY].eastWall = false;
+        newMaze[nextX][nextY].east = false;
       
         break;
       case "east":
@@ -108,8 +109,8 @@ function createStartPath(maze) {
         nextX = nextCell.row;
         nextY = nextCell.col;
 
-        newMaze[currentX][currentY].eastWall = false;
-        newMaze[nextX][nextY].westWall = false;
+        newMaze[currentX][currentY].east = false;
+        newMaze[nextX][nextY].west = false;
 
         break;
       case "south":
@@ -119,8 +120,8 @@ function createStartPath(maze) {
         nextX = nextCell.row;
         nextY = nextCell.col;
 
-        newMaze[currentX][currentY].southWall = false;
-        newMaze[nextX][nextY].northWall = false;
+        newMaze[currentX][currentY].south = false;
+        newMaze[nextX][nextY].north = false;
         break;
       case "north":
         currentX = currentCell.row;
@@ -129,8 +130,8 @@ function createStartPath(maze) {
         nextX = nextCell.row;
         nextY = nextCell.col;
       
-        newMaze[currentX][currentY].northWall = false;
-        newMaze[nextX][nextY].southWall = false;
+        newMaze[currentX][currentY].north = false;
+        newMaze[nextX][nextY].south = false;
         break;
     }
   };
@@ -233,7 +234,7 @@ function initializeMaze(size) {
   for (let i = 0; i < size; i++) {
     let row = [];
     for (let j = 0; j < size; j++) {
-      row.push(new Cell(j, i));
+      row.push(new Cell(i, j)); // Swap i and j here
     }
     maze.push(row);
   }
@@ -247,12 +248,12 @@ function drawMaze(maze) {
   const colSize = maze.cols;
   const rowSize = maze.rows;
 
-  for (let i = 0; i < colSize; i++) {
+  for (let i = 0; i < rowSize; i++) {
     const row = document.createElement("row");
     row.classList.add("row");
     mazeContainer.appendChild(row);
 
-    for (let j = 0; j < rowSize; j++) {
+    for (let j = 0; j < colSize; j++) {
       const cell = document.createElement("cell");
       cell.classList.add("cell");
 
@@ -272,19 +273,19 @@ function drawMaze(maze) {
         cell.classList.add("next-cell");
       }
 
-      if (maze.maze[i][j].northWall) {
+      if (maze.maze[i][j].north) {
         cell.classList.add("up");
       }
 
-      if (maze.maze[i][j].southWall) {
+      if (maze.maze[i][j].south) {
         cell.classList.add("down");
       }
 
-      if (maze.maze[i][j].eastWall) {
+      if (maze.maze[i][j].east) {
         cell.classList.add("right");
       }
 
-      if (maze.maze[i][j].westWall) {
+      if (maze.maze[i][j].west) {
         cell.classList.add("left");
       }
 

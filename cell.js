@@ -1,11 +1,11 @@
 export class Cell {
-        constructor(row, col, northWall = true, eastWall = true, westWall = true, southWall = true, isCurrentCell = false, isNextCell = false, isStart = false, isGoal = false){
+        constructor(row, col, north = true, east = true, west = true, south = true, isCurrentCell = false, isNextCell = false, isStart = false, isGoal = false){
             this.row = row;
             this.col = col;
-            this.northWall = northWall;
-            this.eastWall = eastWall;
-            this.westWall = westWall;
-            this.southWall = southWall;
+            this.north = north;
+            this.east = east;
+            this.west = west;
+            this.south = south;
             this.isCurrentCell = isCurrentCell;
             this.isNextCell = isNextCell;
             this.isStart = isStart;
