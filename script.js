@@ -7,14 +7,15 @@ import { MazeObject } from "./maze-object.js";
 
 const generateButton = document.getElementById('generate-new')
 const loadingContainer = document.getElementById('loading-container')
-
-generateButton.addEventListener('click', start)
+const sizeInput = document.getElementById('size-input')
+generateButton.addEventListener('click', function () {
+  start(parseInt(sizeInput.value));
+})
 
 let currentLoadTime = 0;
 
-function start() {
+function start(size = 10) {
   console.log("Javascript is running :)");
-  let size = 10;
   console.log("New Maze: ");
   let maze = generateMaze(size);
   console.table(`Final maze: `);
