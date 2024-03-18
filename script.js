@@ -254,10 +254,14 @@ function drawMaze(maze) {
     row.classList.add("row");
     mazeContainer.appendChild(row);
 
+    row.style.gridTemplateColumns = "repeat(" + maze.cols + ", " + 50 + "px";
+    row.style.gridTemplateRows = "repeat(" + maze.rows + ", " + 50 + "px)";
+    console.log(row.style.gridTemplateRows)
+
     for (let j = 0; j < colSize; j++) {
       const cell = document.createElement("cell");
       cell.classList.add("cell");
-
+      console.log(cell.style.gridTemplateColumns);
       if (maze.maze[i][j].isStart) {
         cell.classList.add("start");
       }
